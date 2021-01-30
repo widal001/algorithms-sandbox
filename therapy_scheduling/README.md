@@ -26,7 +26,7 @@ And the following constraints specified:
 
 Given the following inputs:
 - Number of patients
-- Number of group sessions
+- Number of groups
 - Number of times per week each group must meet
 - Number of individual sessions per week each patient must have in each therapeutic category
 
