@@ -36,13 +36,16 @@ BLOCKS = [
     "Session 3C",
 ]
 
-DECISION_VARIABLES = [
-    {
-        "Rooms": 1,
-        "Capacity": 20,
-        "Blocks": 2,
-        "Staff": {"A": 1},
-        "Groups": 1,
-        "Patients": 1,
-    }
-]
+VARIABLES = {
+    "one category": {
+        "Rooms": {
+            "Room 1": ["individual", "group"],
+            "Room 2": ["individual", "group"],
+        },
+        "Blocks": ["Monday Morning", "Monday Afternoon"],
+        "Staff": {"Therapy": ["Alice", "Bob"]},
+        "Groups": {"Therapy": ["Body Image"]},
+        "Individual": {"Therapy": 1},
+        "Patients": 2,
+    },
+}
