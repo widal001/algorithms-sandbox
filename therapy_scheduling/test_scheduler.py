@@ -34,12 +34,6 @@ class TestCheckValidScheduling:
         assert exists is False
         assert message == error
 
-    def test_total_staff_shortage(self):
-        """Tests that check_scheduling_exists() fails when total number
-        of required sessions exceeds the total number of staff
-        """
-        assert 1
-
     def test_individual_room_shortage(self):
         """Tests that check_scheduling_exists() fails when the number of rooms
         available for a particular session type exceeds the number of sessions
@@ -79,6 +73,12 @@ class TestCheckValidScheduling:
         # validation
         assert exists is False
         assert message == error
+
+    def test_total_staff_shortage(self):
+        """Tests that check_scheduling_exists() fails when total number
+        of required sessions exceeds the total number of staff
+        """
+        assert 1
 
     def test_staff_category_shortage(self):
         """Tests that check_scheduling_exists() fails when the number of staff
