@@ -36,16 +36,17 @@ BLOCKS = [
     "Session 3C",
 ]
 
-VARIABLES = {
+INPUTS = {
     "one category": {
-        "Rooms": {
+        "rooms": {
             "Room 1": ["individual", "group"],
             "Room 2": ["individual", "group"],
+            "Room 3": ["individual"],
         },
-        "Blocks": ["Monday Morning", "Monday Afternoon"],
-        "Staff": {"Therapy": ["Alice", "Bob"]},
-        "Groups": {"Therapy": ["Body Image"]},
-        "Individual": {"Therapy": 1},
-        "Patients": 2,
+        "blocks": ["Morning", "Afternoon"],
+        "staff": {"Therapy": ["Alice", "Bob"]},
+        "groups": {"Therapy": ["Body Image"]},
+        "individual": {"Therapy": 1},
+        "patients": 3,
     },
 }
