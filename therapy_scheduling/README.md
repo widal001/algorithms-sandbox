@@ -16,10 +16,10 @@ With the following variables fixed:
 - Number of staff per category
 
 And the following constraints specified:
-- Staff members can lead a maximum of one session (group or individual) per session block
-- Rooms can hold a maximum of one session (individual or group) per session block
-- Group sessions must have a minimum of one staff member present
-- All individual sessions a patient has in a given category must be with the same staff member
+1. Staff members can lead a maximum of one session (group or individual) per session block
+1. Rooms can hold a maximum of one session (individual or group) per session block
+1. Group sessions must have a minimum of one staff member present
+1. All individual sessions a patient has in a given category must be with the same staff member
 
 Given the following inputs:
 - Number of patients
