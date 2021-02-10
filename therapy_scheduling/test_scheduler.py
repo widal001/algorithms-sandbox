@@ -25,7 +25,7 @@ class TestCheckValidScheduling:
         inputs = deepcopy(INPUTS["one category"])
         del inputs["rooms"]["Room 2"]
         del inputs["rooms"]["Room 3"]
-        error = "There aren't enough rooms to schedule all required sessions"
+        error = "There aren't enough  rooms to schedule all  sessions"
 
         # execution
         exists, message = check_scheduling_exists(inputs)
@@ -76,13 +76,38 @@ class TestCheckValidScheduling:
 
     def test_total_staff_shortage(self):
         """Tests that check_scheduling_exists() fails when total number
-        of required sessions exceeds the total number of staff
+        of required sessions exceeds the total number of staff, even when one
+        staff member is listed under multiple categories
         """
-        assert 1
+        # setup
+        inputs = deepcopy(INPUTS["one category"])
+        inputs["staff"]["Therapy"].remove("Bob")
+        assert inputs["staff"]["Therapy"] == ["Alice"]
+        inputs["staff"]["Nutrition"] = ["Alice"]  # tests double counting
+        error = "There aren't enough  staff to lead all  sessions"
+
+        # execution
+        exists, message = check_scheduling_exists(inputs)
+
+        # validation
+        assert exists is False
+        assert message == error
 
     def test_staff_category_shortage(self):
         """Tests that check_scheduling_exists() fails when the number of staff
         available for a particular category exceeds the number of sessions
         required for that category
         """
-        assert 1
+        # setup
+        inputs = deepcopy(INPUTS["one category"])
+        inputs["staff"]["Therapy"].remove("Bob")
+        assert inputs["staff"]["Therapy"] == ["Alice"]
+        inputs["staff"]["Nutrition"] = ["Charlie"]
+        error = "There aren't enough Therapy staff to lead all Therapy sessions"
+
+        # execution
+        exists, message = check_scheduling_exists(inputs)
+
+        # validation
+        assert exists is False
+        assert message == error
