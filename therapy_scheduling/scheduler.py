@@ -1,7 +1,7 @@
 def check_scheduling_exists(inputs):
 
     # grab variables from input
-    patients = inputs["patients"]
+    patient_count = len(inputs["patients"])
     groups = inputs["groups"]
     individuals = inputs["individual"]
     rooms = inputs["rooms"]
@@ -10,7 +10,7 @@ def check_scheduling_exists(inputs):
 
     # calculate required sessions
     session_group = sum(len(g) for g in groups.values())
-    session_individual = patients * sum(individuals.values())
+    session_individual = patient_count * sum(individuals.values())
     session_total = session_group + session_individual
 
     # calculate total number of staff and rooms
@@ -25,18 +25,18 @@ def check_scheduling_exists(inputs):
 
     # error statements
     def staff_error(x=""):
-        return f"There aren't enough {x} staff to lead all {x} sessions"
+        return f"There aren't enough {x}staff to lead all {x}sessions"
 
     def room_error(x=""):
-        return f"There aren't enough {x} rooms to schedule all {x} sessions"
+        return f"There aren't enough {x}rooms to schedule all {x}sessions"
 
     # check room and total staff capacity
     if session_total > room_total:
         return False, room_error()
     elif session_group > room_group:
-        return False, room_error("group")
+        return False, room_error("group ")
     elif session_individual > room_individual:
-        return False, room_error("individual")
+        return False, room_error("individual ")
     elif session_total > staff_total:
         return False, staff_error()
 
@@ -44,9 +44,13 @@ def check_scheduling_exists(inputs):
     categories = set(groups.keys()) | set(individuals.keys())
     for c in categories:
         staff_count = len(staff[c]) * block_count
-        session_count = len(groups[c]) + (individuals[c] * patients)
+        session_count = len(groups[c]) + (individuals[c] * patient_count)
         if session_count > staff_count:
-            return False, staff_error(c)
+            return False, staff_error(c + " ")
 
     message = "A valid schedule is possible with the given inputs"
     return True, message
+
+
+def create_schedule(inputs):
+    pass

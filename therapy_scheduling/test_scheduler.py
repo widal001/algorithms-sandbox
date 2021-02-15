@@ -25,7 +25,7 @@ class TestCheckValidScheduling:
         inputs = deepcopy(INPUTS["one category"])
         del inputs["rooms"]["Room 2"]
         del inputs["rooms"]["Room 3"]
-        error = "There aren't enough  rooms to schedule all  sessions"
+        error = "There aren't enough rooms to schedule all sessions"
 
         # execution
         exists, message = check_scheduling_exists(inputs)
@@ -84,7 +84,7 @@ class TestCheckValidScheduling:
         inputs["staff"]["Therapy"].remove("Bob")
         assert inputs["staff"]["Therapy"] == ["Alice"]
         inputs["staff"]["Nutrition"] = ["Alice"]  # tests double counting
-        error = "There aren't enough  staff to lead all  sessions"
+        error = "There aren't enough staff to lead all sessions"
 
         # execution
         exists, message = check_scheduling_exists(inputs)
