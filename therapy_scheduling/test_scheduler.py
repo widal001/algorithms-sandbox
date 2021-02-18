@@ -1,10 +1,10 @@
 from copy import deepcopy
 
-from therapy_scheduling.data import INPUTS
-from therapy_scheduling.scheduler import check_scheduling_exists
+from therapy_scheduling.data import INPUTS, SCHEDULES
+from therapy_scheduling.scheduler import Practice
 
 
-class TestCheckValidScheduling:
+class TestCheckSchedulingExists:
     def test_possible(self):
         """Tests that check_scheduling_exists() passes with valid inputs"""
         # setup
@@ -12,7 +12,8 @@ class TestCheckValidScheduling:
         exp_message = "A valid schedule is possible with the given inputs"
 
         # execution
-        exists, message = check_scheduling_exists(inputs)
+        p = Practice(inputs)
+        exists, message = p.check_scheduling_exists()
 
         # validation
         assert exists
@@ -28,28 +29,28 @@ class TestCheckValidScheduling:
         error = "There aren't enough rooms to schedule all sessions"
 
         # execution
-        exists, message = check_scheduling_exists(inputs)
+        p = Practice(inputs)
+        exists, message = p.check_scheduling_exists()
 
         # validation
         assert exists is False
         assert message == error
 
-    def test_individual_room_shortage(self):
+    def test_private_room_shortage(self):
         """Tests that check_scheduling_exists() fails when the number of rooms
         available for a particular session type exceeds the number of sessions
         required for that type
         """
         # setup
         inputs = deepcopy(INPUTS["one category"])
-        inputs["rooms"]["Room 2"].remove("individual")
+        inputs["rooms"]["Room 2"].remove("private")
         del inputs["rooms"]["Room 3"]
         assert inputs["rooms"]["Room 2"] == ["group"]
-        error = (
-            "There aren't enough individual rooms to schedule all individual sessions"
-        )
+        error = "There aren't enough private rooms to schedule all private sessions"
 
         # execution
-        exists, message = check_scheduling_exists(inputs)
+        p = Practice(inputs)
+        exists, message = p.check_scheduling_exists()
 
         # validation
         assert exists is False
@@ -64,11 +65,14 @@ class TestCheckValidScheduling:
         inputs = deepcopy(INPUTS["one category"])
         inputs["groups"]["Therapy"].extend(["Communication", "Nutrition"])
         inputs["rooms"]["Room 2"].remove("group")
-        assert inputs["rooms"]["Room 2"] == ["individual"]
+        assert inputs["rooms"]["Room 2"] == ["private"]
         error = "There aren't enough group rooms to schedule all group sessions"
 
         # execution
-        exists, message = check_scheduling_exists(inputs)
+        p = Practice(inputs)
+        print(p.room_count)
+        print(p.session_count)
+        exists, message = p.check_scheduling_exists()
 
         # validation
         assert exists is False
@@ -87,7 +91,8 @@ class TestCheckValidScheduling:
         error = "There aren't enough staff to lead all sessions"
 
         # execution
-        exists, message = check_scheduling_exists(inputs)
+        p = Practice(inputs)
+        exists, message = p.check_scheduling_exists()
 
         # validation
         assert exists is False
@@ -106,8 +111,49 @@ class TestCheckValidScheduling:
         error = "There aren't enough Therapy staff to lead all Therapy sessions"
 
         # execution
-        exists, message = check_scheduling_exists(inputs)
+        p = Practice(inputs)
+        exists, message = p.check_scheduling_exists()
 
         # validation
         assert exists is False
         assert message == error
+
+
+class TestPractice:
+    def test_read_inputs_one(self):
+        # setup
+        inputs = INPUTS["one category"]
+        patients = ["Dana", "Eddie", "Francine"]
+        groups = ["Body Image"]
+        staff = ["Alice", "Bob"]
+        rooms = ["Room 1", "Room 2", "Room 3"]
+        blocks = ["Morning", "Afternoon"]
+        categories = ["Therapy"]
+
+        # setup counts
+        room_count = {"group": 4, "private": 6, "total": 6}
+        session_count = {
+            "private": 3,
+            "group": 1,
+            "total": 4,
+            "category": {"Therapy": 4},
+        }
+        staff_count = {"total": 4, "category": {"Therapy": 4}}
+
+        # execution
+        p = Practice(inputs)
+
+        # validation - inputs
+        assert list(p.patients.keys()) == patients
+        assert list(p.groups.keys()) == groups
+        assert list(p.staff.keys()) == staff
+        assert list(p.rooms.keys()) == rooms
+        assert p.blocks == blocks
+        assert p.categories == categories
+
+        # validation - counts
+        assert p.patient_count == 3
+        assert p.block_count == 2
+        assert p.room_count == room_count
+        assert p.staff_count == staff_count
+        assert p.session_count == session_count
